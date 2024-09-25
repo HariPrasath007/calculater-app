@@ -47,7 +47,7 @@ const Calculator: React.FC = () => {
     const doCalculation = () => {
         try {
             const inputval: string | undefined = calInputvalue.current?.value;
-            let value = inputval?.replace('\\n','\n')
+            let value = inputval?.replaceAll('\\n','\n')
             if (value?.startsWith('"')) {
                 value = value.slice(1);
             }
