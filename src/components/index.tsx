@@ -9,50 +9,41 @@ const Calculator: React.FC = () => {
     const [error, setError] = useState<string>('');
 
     function add(numbers: string): number {
-        // console.log(`test-------${JSON.stringify(numbers)}`)
-        if (numbers === "") {
-            return 0;
-        }
-    
+        console.log(`test-------${JSON.stringify(numbers)}`)
+
+        if (numbers === "") return 0;
+
         let delimiter = ",";
-        let numString = numbers;
-    
-        // Check for custom delimiter
-        const customDelimiterMatch = numString.match(/^\/\/(.+)\n(.*)$/);
-        if (customDelimiterMatch) {
-            delimiter = customDelimiterMatch[1];
-            numString = customDelimiterMatch[2];
+        if (numbers.startsWith("//")) {
+            const parts = numbers.split("\n");
+            delimiter = parts[0].substring(2); // Extract delimiter
+            numbers = parts.slice(1).join("\n"); // Remaining numbers
         }
     
-        // Split numbers using the defined delimiters (comma, newline, or custom)
-        const regex = new RegExp(`${delimiter}|\\n`);
-        const numList = numString.split(regex);
+        // Split by the delimiter and newlines
+        const regex = new RegExp(`[${delimiter}\n]`);
+        const numberArray = numbers.split(regex);
     
         const negatives: number[] = [];
-        let total = 0;
+        const sum = numberArray.reduce((acc, curr) => {
+            console.log(curr)
+            const num = parseInt(curr, 10);
+            if (isNaN(num)) return acc; // Skip non-numeric entries
     
-        for (const num of numList) {
-            const parsedNum = convertToInt(num);
-            if (parsedNum < 0) {
-                negatives.push(parsedNum);
+            if (num < 0) {
+                negatives.push(num);
             }
-            if (parsedNum < 1000) {
-                total += parsedNum;
-            }
-        }
+            return acc + num;
+        }, 0);
     
         if (negatives.length > 0) {
-            throw new Error("Negative numbers not allowed: " + negatives.join(","));
+            throw new Error(`negative numbers not allowed ${negatives.join(", ")}`);
         }
     
-        return total;
-    }
-    
-    function convertToInt(num: string): number {
-        return parseInt(num, 10);
-    }
-    
+        return sum;
 
+    }
+    
 
     const doCalculation = () => {
         try {
