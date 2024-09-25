@@ -26,7 +26,6 @@ const Calculator: React.FC = () => {
     
         const negatives: number[] = [];
         const sum = numberArray.reduce((acc, curr) => {
-            console.log(curr)
             const num = parseInt(curr, 10);
             if (isNaN(num)) return acc; // Skip non-numeric entries
     
@@ -48,8 +47,14 @@ const Calculator: React.FC = () => {
     const doCalculation = () => {
         try {
             const inputval: string | undefined = calInputvalue.current?.value;
-            const value = inputval?.replace('\\n','\n')
-            if (typeof value === 'string' && value.trim() !== '') {
+            let value = inputval?.replace('\\n','\n')
+            if (value?.startsWith('"')) {
+                value = value.slice(1);
+            }
+            if (value?.endsWith('"')) {
+                value = value.slice(0,-1);
+            }
+            if (typeof value === 'string') {
                 const sum = add(`${value}`);
                 setResult(sum);
                 setError(''); // Call your function with the input value
