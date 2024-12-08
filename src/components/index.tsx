@@ -9,10 +9,8 @@ const Calculator: React.FC = () => {
     const [error, setError] = useState<string>('');
 
     function add(numbers: string): number {
-        console.log(`test-------${JSON.stringify(numbers)}`)
 
         if (numbers === "") return 0;
-
         let delimiter = ",";
         if (numbers.startsWith("//")) {
             const parts = numbers.split("\n");
